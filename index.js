@@ -1,20 +1,22 @@
-var Discord = require('discord.js');
-const { Client } = require('undici');
-var client = new Discord.Client({
+const { Client, GatewayIntentBits } = require('discord.js');
+
+
+const client = new Client({
     intents: [
-        Discord.intents.FLAGS.GUILD,
-        Discord.intents.FLAGS.GUILD_MESSAGE,
-        Discord.intents.FLAGS.DIRECT_MESSAGE,
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages,
     
 ]});
 
 const prefix = '!';
 
-Client.on('ready', () => {
+client.on('ready', () => {
     console.log('Bot Ready');
 });
 
-Client.on('messageCreate', () => {
+client.on('messageCreate', () => {
     if (message.author.bot) return;
 
     if (message.content === prefix + 'HelloDoggo') {
@@ -23,7 +25,7 @@ Client.on('messageCreate', () => {
             .setTitle('Doggo Happy')
             .setURL('https://discord.js.org/')
             .setImage('https://tinyurl.com/3t2j6fw3')
-            
+            message.channel.send({embeds: [embed]});
     }
     else if (message.content === prefix + 'Help') {
         const embed = new Discord.MessageEmbed()
@@ -35,8 +37,23 @@ Client.on('messageCreate', () => {
             .setThumbnail('https://tinyurl.com/53aahx5u')
             .addField('**__!HelloDoggo__**', 'Display the answer of Doggo when you call him')
             .addField('**__!Help**', 'Display all the commands for Doggo')
+            .setTimestamp();
+
+            message.channel.send({embeds: [embed]});
     }
     messsage.reply('Pls take care more of me');
 });
 
-Client.login('')
+client.on('guildMemberAdd', member => {
+    console.log('nouveau membre incomming');
+    client.channels.cache.get('748364749212745728').send('<@' + member.id + '> is now member of the doggo family !');
+});
+
+client.on('guildMemberRemove', member => {
+    console.log('un membre est parti');
+    client.channels.cache.get('748364749212745728').send('<@' + member.id + '> left the doggo family !');
+});
+
+
+
+Client.login('MTA1NTgzODMzNDg5NjgzNjYzOQ.Gph7tv.BBBJFOYkESw-3jSB_0TJzQ9wwXxLrOZ1zKNkEg')
